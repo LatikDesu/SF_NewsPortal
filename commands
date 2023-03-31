@@ -1,0 +1,58 @@
+from django.contrib.auth.models import User
+user1=User.objects.create_user('User1')
+user2=User.objects.create_user('User2')
+
+from news.models import *
+Author.objects.create(user=user1)
+Author.objects.create(user=user2)
+
+Category.objects.create(name='Спорт')
+Category.objects.create(name='Политика')
+Category.objects.create(name='Наука и техника')
+Category.objects.create(name='Кино')
+
+author1=Author.objects.get(user=user1)
+post1=Post.objects.create(author=author1, type='NW', title='News', description='many bykov')
+C=Category.objects.get(name='Спорт')
+post1.category.add(C)
+C=Category.objects.get(name='Наука и техника')
+post1.category.add(C)
+
+author2=Author.objects.get(user=user2)
+post2=Post.objects.create(author=author2, type='AR', title='Article', description='lorem ipsum')
+post2.category.add(C)
+post3=Post.objects.create(author=author2, type='AR', title='Article2', description='other lorem ipsum')
+post3.category.add(C)
+
+K1=Comment.objects.create(user=user1, text='Lorem ipsum dolor  sed', post=post1)
+K2=Comment.objects.create(user=user1, text='sit amet, consectetur adipiscing elit', post=post2)
+K3=Comment.objects.create(user=user2, text='do eiusmod tempor incididunt ut labore', post=post3)
+K4=Comment.objects.create(user=user2, text='et dolore magna aliqua', post=post3)
+
+
+K1.like()
+K2.dislike()
+K3.dislike()
+K3.dislike()
+K4.like()
+K4.like()
+
+post1.like()
+post2.like()
+post2.dislike()
+post2.like()
+post3.like()
+post3.like()
+post3.like()
+
+author1.update_rating()
+author2.update_rating()
+
+Author.objects.order_by('-rating').values('user__username', 'rating').first()
+
+best_post = Post.objects.order_by('-rating').first()
+f'{best_post.time} | {best_post.author.user.username} | {best_author.rating} | {best_post.title} | {best_post.preview()}'
+
+comments = Comment.objects.filter(post=best_post)
+for comment in comments:
+ 	print (f'{comment.time} | {comment.user.username} | {comment.rating} | {comment.text}')
