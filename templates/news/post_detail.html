@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %} {{ title }} {% endblock title %}
 
@@ -13,10 +14,8 @@
                             <div class="meta-cat">
                                 <a class="post-category font-extra text-color text-uppercase font-sm letter-spacing-1"
                                    href="#">
-                                    {% for category in categories %}
-                                        {% if category.post_id == post.id %}
-                                            {{ category.category }}
-                                        {% endif %}
+                                    {% for category in post.postcategory_set.all %}
+                                        {{ category.category }}
                                     {% endfor %}
                                 </a>
                             </div>
@@ -29,7 +28,7 @@
                                 <span class="text-uppercase font-sm letter-spacing-1">{{ post.time|date:"M d, Y" }}</span>
                             </div>
                             <div class="post-featured-image mt-5">
-                                <img src="{{ post.poster.url }}" class="img-fluid w-75" alt="featured-image">
+                                <img src="{{ post.poster.url }}" class="img-fluid w-50" alt="featured-image">
                             </div>
                         </div>
                         <div class="post-body">
@@ -41,7 +40,7 @@
                                     class="tags-share-box center-box d-flex text-center justify-content-between border-top border-bottom py-3">
 
                                 <span class="single-comment-o"><i
-                                        class="fa fa-comment-o"></i> {{ comments|length }} comments </span>
+                                        class="fa fa-comment-o"></i> {{ post.comment_set.all|length }} comments </span>
 
                                 <div class="post-share">
                                     <span class="count-number-like">{{ post.rating|floatformat }}</span>
@@ -141,10 +140,16 @@
                     {#                    </div>#}
 
                     <div class="comment-area my-5">
-                        <h3 class="mb-4 text-center"> {{ comments|length }} Comments</h3>
-                        {% for comment in comments %}
+                        <h3 class="mb-4 text-center"> Комментарии </h3>
+                        {% for comment in post.get_comments %}
                             <div class="comment-area-box media">
-                                <img alt="" src="{{ comment.user.image.url }}" class="img-fluid float-left mr-3 mt-2">
+                                {% if comment.user.image %}
+                                    <img src="{{ comment.user.image.url }}"
+                                         class="img-fluid float-left mr-3 mt-2">
+                                {% else %}
+                                    <img src="{% static 'images/default_avatar.jpg' %}"
+                                         class="img-fluid float-left mr-3 mt-2">
+                                {% endif %}
 
                                 <div class="media-body ml-4">
                                     <h4 class="mb-0">{{ comment.user }} </h4>
@@ -155,42 +160,68 @@
                                         <p>{{ comment.text }}</p>
                                     </div>
                                     <div class="comment-meta mt-4 mt-lg-0 mt-md-0">
-                                        <a href="#" class="text-underline ">Reply</a>
+                                        <a href="#comment-form"
+                                           onclick="addComment('{{ comment.user }}', '{{ comment.id }}')"
+                                           class="text-underline ">Ответить</a>
+
+
+                                        {% for comment in comment.comment_set.all %}
+                                            <div class="media mt-5 editContent">
+                                                <a class="pr-3" href="#">
+                                                    {% if comment.user.image %}
+                                                        <img src="{{ comment.user.image.url }}"
+                                                             class="img-fluid float-left w-50 h-50">
+                                                    {% else %}
+                                                        <img src="{% static 'images/default_avatar.jpg' %}"
+                                                             class="img-fluid float-left w-50 h-50">
+                                                    {% endif %}
+                                                </a>
+                                                <div class="media-body">
+                                                    <h5 class="mt-0 editContent">{{ comment.user }}</h5>
+                                                    <p class="mt-2 editContent">{{ comment.text }}</p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
                                     </div>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
-
-
-                    {#                    <form class="comment-form mb-5 gray-bg p-5" id="comment-form">#}
-                    {#                        <h3 class="mb-4 text-center">Leave a comment</h3>#}
-                    {#                        <div class="row">#}
-                    {#                            <div class="col-lg-12">#}
-                    {#                                <textarea class="form-control mb-3" name="comment" id="comment" cols="30" rows="5"#}
-                    {#                                          placeholder="Comment"></textarea>#}
-                    {#                            </div>#}
-                    {#                            <div class="col-md-6">#}
-                    {#                                <div class="form-group">#}
-                    {#                                    <input class="form-control" type="text" name="name" id="name" placeholder="Name:">#}
-                    {#                                </div>#}
-                    {#                            </div>#}
-                    {#                            <div class="col-md-6">#}
-                    {#                                <div class="form-group">#}
-                    {#                                    <input class="form-control" type="text" name="mail" id="mail" placeholder="Email:">#}
-                    {#                                </div>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {##}
-                    {#                        <input class="btn btn-primary" type="submit" name="submit-contact" id="submit_contact"#}
-                    {#                               value="Submit Message">#}
-                    {#                    </form>#}
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'news:add_comment' post.id %}" method="post"
+                              class="comment-form mb-5 gray-bg p-5" id="comment-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent" id="comment-parent" value="">
+                            <h3 class="mb-4 text-center">Оставить комментарий</h3>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                                    <textarea class="form-control mb-3" name="text" id="comment"
+                                                              cols="30" rows="5"
+                                                              placeholder="Comment"></textarea>
+                                </div>
+                            </div>
+                            <input class="btn btn-primary" type="submit" name="submit-contact" id="submit_contact"
+                                   value="Отправить">
+                        </form>
+                    {% else %}
+                        <h3 class="mb-4 text-center">Хотите оставить комментарий?</h3>
+                        <div class="tags-share-box center-box d-flex text-center justify-content-lg-around border-top border-bottom py-3">
+                            <a class="btn btn-primary" href="#" role="button">Войти</a>
+                            <a class="btn btn-primary" href="#" role="button">Зарегистрироваться</a>
+                        </div>
+                    {% endif %}
 
                 </div>
                 {% include 'include/sidebar.html' %}
             </div>
         </div>
     </section>
-
+    <script>
+        function addComment(name, id) {
+            document.getElementById("comment-parent").value = id;
+            document.getElementById("comment").innerText = `${name}, `
+        }
+    </script>
 {% endblock content %}
 

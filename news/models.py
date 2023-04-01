@@ -1,10 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.urls import reverse
 
 import accounts.models
 from .resources import *
-from accounts.models import Author
 
 
 # Create your models here.
@@ -35,8 +32,8 @@ class Post(models.Model):
     author = models.ForeignKey(accounts.models.Author, on_delete=models.CASCADE)
     category = models.ManyToManyField(Category, through='PostCategory')
 
-    def preview(self):
-        return self.description[:124:1] + '...'
+    def get_comments(self):
+        return self.comment_set.filter(parent__isnull=True)
 
     def like(self):
         self.rating += 1
@@ -67,8 +64,12 @@ class Comment(models.Model):
     rating = models.FloatField(default=0)
     time = models.DateTimeField(auto_now_add=True)
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(accounts.models.Author, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
+    )
+
+    post = models.ForeignKey(Post, verbose_name="Статья", on_delete=models.CASCADE)
+    user = models.ForeignKey(accounts.models.Author, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def like(self):
         self.rating += 1
@@ -77,3 +78,6 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+    def __str__(self):
+        return f'{self.post.title} - {self.user}'
