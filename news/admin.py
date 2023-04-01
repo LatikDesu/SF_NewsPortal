@@ -1,7 +1,7 @@
 from django.contrib import admin
 from unicodedata import category
 
-from .models import Author, Post, Category, Comment, PostCategory
+from .models import Post, Category, Comment, PostCategory
 
 
 # Register your models here.
@@ -15,11 +15,6 @@ class CommentInline(admin.TabularInline):
 class CategoryInline(admin.TabularInline):
     model = PostCategory
     extra = 0
-
-
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rating')
 
 
 @admin.register(Post)

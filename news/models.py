@@ -1,35 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+
+import accounts.models
 from .resources import *
+from accounts.models import Author
 
 
 # Create your models here.
 
-class Author(models.Model):
-    rating = models.FloatField(default=0)
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def update_rating(self):
-        self.rating = 0
-        for post in Post.objects.filter(author_id=self.id):
-            self.rating += post.rating * 3
-            for comment in Comment.objects.filter(post_id=post.id):
-                self.rating += comment.rating
-        for comment in Comment.objects.filter(user_id=self.user):
-            self.rating += comment.rating
-        self.save()
-
-    def __str__(self):
-        return f'{self.user}'
-
-    class Meta:
-        verbose_name = "Автор"
-        verbose_name_plural = "Авторы"
-
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField("Категория", max_length=255, unique=True)
+    description = models.TextField("Описание")
+    url = models.SlugField(max_length=160, unique=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -45,8 +29,10 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     rating = models.FloatField(default=0)
+    draft = models.BooleanField("Черновик", default=False)
+    poster = models.ImageField("Постер", upload_to="news", null=True, blank=True)
 
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(accounts.models.Author, on_delete=models.CASCADE)
     category = models.ManyToManyField(Category, through='PostCategory')
 
     def preview(self):
@@ -82,7 +68,7 @@ class Comment(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(accounts.models.Author, on_delete=models.CASCADE)
 
     def like(self):
         self.rating += 1
