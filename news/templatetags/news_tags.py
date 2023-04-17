@@ -11,5 +11,5 @@ def get_categories():
 
 @register.inclusion_tag('news/tags/last_news.html')
 def get_last_posts(count=3):
-    posts = Post.objects.order_by("id")[:count]
+    posts = Post.objects.order_by("-id")[:count]
     return {"last_posts": posts}

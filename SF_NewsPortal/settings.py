@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
 
     'debug_toolbar',
+    'django_filters',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

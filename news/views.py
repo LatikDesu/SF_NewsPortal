@@ -4,7 +4,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView
 
 from news.forms import CommentForm
-from news.models import Post, PostCategory, Comment
+from news.models import Post
 from accounts.models import Author
 
 
@@ -12,7 +12,7 @@ from accounts.models import Author
 class PostView(ListView):
     model = Post
     title = 'DesuNews - blog'
-    paginate_by = 6
+    paginate_by = 1
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PostView, self).get_context_data()

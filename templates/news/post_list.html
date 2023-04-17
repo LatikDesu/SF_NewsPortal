@@ -4,67 +4,47 @@
 
 {% block content %}
 
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="row">
-                        {% for post in object_list %}
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <article class="post-grid mb-5 ">
-                                    <a class="post-thumb mb-4 d-block" href="{% url 'news:news_detail' post.id %}">
-                                        <img src="{{ post.poster.url }}" alt="IMAGE" class="img-fluid w-100">
-                                    </a>
+		<section class="section-padding">
+				<div class="container">
+						<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<div class="row">
+												{% for post in object_list %}
+														<div class="col-lg-4 col-md-6 col-sm-6">
+																<article class="post-grid mb-5 ">
+																		<a class="post-thumb mb-4 d-block" href="{% url 'news:news_detail' post.id %}">
+																				<img src="{{ post.poster.url }}" alt="IMAGE" class="news-image">
+																		</a>
 
-                                    <div class="post-content-grid">
-                                        <div class="label-date">
-                                            <span class="day">{{ post.time|date:" d " }}</span>
-                                            <span class="month text-uppercase">{{ post.time|date:" M " }}</span>
-                                        </div>
-                                        <span class="cat-name text-color font-extra font-sm text-uppercase letter-spacing">
+																		<div class="post-content-grid">
+																				<div class="label-date">
+																						<span class="day">{{ post.time|date:" d " }}</span>
+																						<span class="month text-uppercase">{{ post.time|date:" M " }}</span>
+																				</div>
+																				<span class="cat-name text-color font-extra font-sm text-uppercase letter-spacing">
                                 {% for category in post.postcategory_set.all %}
-                                    {% if category.post_id == post.id %}
-                                        {{ category.category }}
-                                    {% endif %}
+		                                {% if category.post_id == post.id %}
+				                                {{ category.category }}
+		                                {% endif %}
                                 {% endfor %}
                             </span>
-                                        <h3 class="post-title mt-1"><a
-                                                href=" {% url 'news:news_detail' post.id %} ">{{ post.title }}</a>
-                                        </h3>
-                                        <p>{{ post.description|truncatewords:24 }}</p>
-                                    </div>
-                                </article>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+																				<h3 class="post-title mt-1"><a
+																								href=" {% url 'news:news_detail' post.id %} ">{{ post.title }}</a>
+																				</h3>
+																				<p>{{ post.description|truncatewords:24 }}</p>
+																		</div>
+																</article>
+														</div>
+												{% endfor %}
+										</div>
+								</div>
 
-                {% if is_paginated %}
-                    <div class="m-auto">
-                        <div class="pagination mt-5 pt-4">
-                            <ul class="list-inline">
-                                <li class="list-inline-item {% if not page_obj.has_previous %} disabled {% endif %}">
-                                    <a href="{% if page_obj.has_previous %} {% url 'news:paginator' page_obj.previous_page_number %} {% else %} # {% endif %}"
-                                       tabindex="-1" aria-disabled="true"><i
-                                            class="ti-arrow-left"></i></a></li>
-                                {% for page in paginator.page_range %}
-                                    <li class="list-inline-item"><a href="{% url 'news:paginator' page %}">
-                                        {{ page }}
-                                    </a>
-                                    </li>
-                                {% endfor %}
-                                <li class="list-inline-item {% if not page_obj.has_next %} disabled {% endif %}">
-                                    <a href="{% if page_obj.has_next %} {% url 'news:paginator' page_obj.next_page_number %} {% else %} # {% endif %}">
-                                        <i class="ti-arrow-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </section>
+								{% if is_paginated %}
+										{% include 'include/pagination.html' %}
+								{% endif %}
+						</div>
+				</div>
+		</section>
 
 {% endblock content %}
 
