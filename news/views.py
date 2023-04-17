@@ -6,17 +6,24 @@ from django.views.generic import ListView, DetailView
 from news.forms import CommentForm
 from news.models import Post
 from accounts.models import Author
+from .filters import PostFilter
 
 
 # Create your views here.
 class PostView(ListView):
     model = Post
     title = 'DesuNews - blog'
-    paginate_by = 1
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PostView, self).get_context_data()
         context['title'] = self.title
+        context['filterset'] = self.filterset
         return context
 
 
