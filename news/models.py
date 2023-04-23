@@ -1,10 +1,10 @@
 from django.db import models
+from django.urls import reverse
+from tinymce.models import HTMLField
 
 import accounts.models
+
 from .resources import *
-
-
-# Create your models here.
 
 
 class Category(models.Model):
@@ -24,7 +24,7 @@ class Post(models.Model):
     type = models.CharField(max_length=2, choices=TYPE, default=news)
     time = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = HTMLField()
     rating = models.FloatField(default=0)
     draft = models.BooleanField("Черновик", default=False)
     poster = models.ImageField("Постер", upload_to="news", null=True, blank=True)
@@ -45,6 +45,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title} ({self.type}): {self.time.strftime("%d.%m.%Y")}: {self.description[:20]}'
+
+    def get_absolute_url(self):
+        return reverse('news:news_detail', kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name = "Статья"

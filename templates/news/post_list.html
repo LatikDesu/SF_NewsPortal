@@ -36,7 +36,7 @@
 																				<h3 class="post-title mt-1"><a
 																								href=" {% url 'news:news_detail' post.id %} ">{{ post.title }}</a>
 																				</h3>
-																				<p>{{ post.description|truncatewords:24 }}</p>
+																				<p>{{ post.description|truncatewords:24|striptags }}</p>
 																		</div>
 																</article>
 														</div>

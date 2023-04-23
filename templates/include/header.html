@@ -14,6 +14,20 @@
 
 						<div class="collapse navbar-collapse" id="navbar-collapse">
 								<ul class="menu navbar-nav ml-auto">
+
+										{% if user.is_authenticated %}
+												<li class="nav-item dropdown">
+														<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
+														   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:#cc835f">
+																Создать
+														</a>
+														<div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+																<a class="dropdown-item" href="{% url 'news:article_create' %}">Создать статью</a>
+																<a class="dropdown-item" href="{% url 'news:news_create' %}">Создать новость</a>
+														</div>
+												</li>
+										{% endif %}
+
 										<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Статьи</a></li>
 										<li class="nav-item dropdown">
 												<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
@@ -66,12 +80,15 @@
 						<div class="row">
 								<div class="col-md-10 col-9">
 										{{ filterset.form }}
+
 								</div>
 								<div class="col-md-2 col-3 text-right">
 										<div class="search_toggle toggle-wrap d-inline-block">
 												<i class="ti-close"></i>
 										</div>
-										<div><input class="btn btn-primary" hidden type="submit" value="Найти"/></div>
+										<div>
+												<input class="btn btn-primary" style="font-size: 16px;" hidden type="submit" value="Найти"/>
+										</div>
 								</div>
 						</div>
 				</div>

@@ -1,5 +1,7 @@
 from django import forms
-from .models import Comment
+from tinymce.widgets import TinyMCE
+
+from .models import Category, Comment, Post
 
 
 class CommentForm(forms.ModelForm):
@@ -14,3 +16,32 @@ class CommentForm(forms.ModelForm):
                                           "rows": "5",
                                           "placeholder": "Комментарий"})
         }
+
+
+class PostForm(forms.ModelForm):
+    title = forms.CharField(max_length=127,
+                            widget=forms.TextInput(attrs={"class": "form-control",
+                                                          "placeholder": "Название"}),
+                            label=False)
+
+    poster = forms.ImageField(widget=forms.FileInput(attrs={"class": "form-control",
+                                                            "id": "poster",
+                                                            "name": "poster"}),
+                              label="Выберите главную иллюстрацию")
+
+    description = forms.CharField(widget=TinyMCE(attrs={"placeholder": "Текст статьи",
+                                                        "id": "description",
+                                                        "name": "description"}),
+                                  label=False)
+
+    category = forms.ModelMultipleChoiceField(queryset=Category.objects.all(),
+                                              widget=forms.SelectMultiple(attrs={
+                                                  "class": "form-control form-select",
+                                                  "size": 5}),
+                                              label="Категории")
+
+    # draft = forms.BooleanField(label="Черновик")
+
+    class Meta:
+        model = Post
+        fields = ("title", "description", "poster", "category",)

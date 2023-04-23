@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
+    'tinymce',
     'debug_toolbar',
     'django_filters',
     'allauth',
@@ -118,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -164,3 +165,22 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 3
+
+# TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')
+TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/j7gdftvdy97nmowd90h71xnnkbn3ibuz0e4qxgay29qwapcv/tinymce/6/tinymce.min.js'
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "720px",
+    "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+               "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+               "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+               "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+               "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+               "a11ycheck ltr rtl | showcomments addcomment code",
+    "custom_undo_redo_levels": 10,
+}
+
+TINYMCE_SPELLCHECKER = True

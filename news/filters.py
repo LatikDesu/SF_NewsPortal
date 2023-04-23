@@ -1,6 +1,8 @@
 from django import forms
-from django_filters import FilterSet, ModelChoiceFilter, CharFilter, DateTimeFilter
-from .models import Post, Category
+from django_filters import (CharFilter, DateTimeFilter, FilterSet,
+                            ModelChoiceFilter)
+
+from .models import Category, Post
 
 
 class PostFilter(FilterSet):

@@ -13,11 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
-from django.conf import settings
 from news.views import PostView
 
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('', PostView.as_view(), name='index'),
     path('news/', include('news.urls'), name='news'),
     path('pages/', include('django.contrib.flatpages.urls')),
+    path('tinymce/', include('tinymce.urls')),
 
 ]
 
