@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
@@ -91,7 +90,7 @@ class PostCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
 
 # Post update
 class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
-    permission_required = ('news.update_post',)
+    permission_required = ('news.change_post',)
 
     form_class = PostForm
     model = Post
@@ -121,7 +120,7 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
 
 # Article create
 class ArticleCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
-    permission_required = ('news.create_post',)
+    permission_required = ('news.add_post',)
 
     form_class = PostForm
     model = Post
@@ -147,7 +146,7 @@ class ArticleCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView)
 
 # Article update
 class ArticleUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
-    permission_required = ('news.update_post',)
+    permission_required = ('news.change_post',)
 
     form_class = PostForm
     model = Post
@@ -162,7 +161,9 @@ class ArticleUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView)
 
 
 # Post delete
-class ArticleDeleteView(DeleteView):
+class ArticleDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post',)
+
     model = Post
     success_url = reverse_lazy('news:news_list')
 
