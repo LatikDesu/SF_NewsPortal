@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -12,7 +15,7 @@ from SF_NewsPortal import settings
 from .filters import PostFilter
 
 
-class AddComment(View):
+class AddComment(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         form = CommentForm(request.POST)
@@ -36,6 +39,9 @@ class PostView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        category_id = self.kwargs.get('category_id')
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
@@ -58,7 +64,9 @@ class PostDetailView(DetailView):
 
 
 # Posts create
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('news.add_post',)
+
     form_class = PostForm
     model = Post
 
@@ -82,22 +90,39 @@ class PostCreateView(CreateView):
 
 
 # Post update
-class PostUpdateView(UpdateView):
+class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('news.update_post',)
+
     form_class = PostForm
     model = Post
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.author != request.user:
+            return HttpResponseForbidden("You don't have permission to edit this post.")
+
+        return super().get(request, *args, **kwargs)
+
 
 # Post delete
-class PostDeleteView(DeleteView):
+class PostDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post',)
+
     model = Post
     success_url = reverse_lazy('news:news_list')
 
     def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.author != request.user:
+            return HttpResponseForbidden("You don't have permission to delete this post.")
         return self.post(request, *args, **kwargs)
 
 
 # Article create
-class ArticleCreateView(CreateView):
+class ArticleCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('news.create_post',)
+
     form_class = PostForm
     model = Post
 
@@ -121,9 +146,19 @@ class ArticleCreateView(CreateView):
 
 
 # Article update
-class ArticleUpdateView(UpdateView):
+class ArticleUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('news.update_post',)
+
     form_class = PostForm
     model = Post
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.author != request.user:
+            return HttpResponseForbidden("You don't have permission to edit this post.")
+
+        return super().get(request, *args, **kwargs)
 
 
 # Post delete
@@ -132,4 +167,7 @@ class ArticleDeleteView(DeleteView):
     success_url = reverse_lazy('news:news_list')
 
     def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.author != request.user:
+            return HttpResponseForbidden("You don't have permission to delete this post.")
         return self.post(request, *args, **kwargs)

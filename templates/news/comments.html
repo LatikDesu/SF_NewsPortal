@@ -67,8 +67,8 @@
 {% else %}
 		<h3 class="mb-4 text-center">Хотите оставить комментарий?</h3>
 		<div class="tags-share-box center-box d-flex text-center justify-content-lg-around border-top border-bottom py-3">
-				<a class="btn btn-primary" href="#" role="button">Войти</a>
-				<a class="btn btn-primary" href="#" role="button">Зарегистрироваться</a>
+				<a class="btn btn-primary" href="{% url 'accounts:login' %}" role="button">Войти</a>
+				<a class="btn btn-primary" href="{% url 'accounts:registration' %}" role="button">Зарегистрироваться</a>
 		</div>
 {% endif %}
 

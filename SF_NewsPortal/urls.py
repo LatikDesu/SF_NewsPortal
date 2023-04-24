@@ -24,8 +24,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', PostView.as_view(), name='index'),
     path('news/', include('news.urls'), name='news'),
+    path('users/', include('accounts.urls', namespace='accounts')),
+
     path('pages/', include('django.contrib.flatpages.urls')),
     path('tinymce/', include('tinymce.urls')),
+    path('accounts/', include('allauth.urls')),
 
 ]
 

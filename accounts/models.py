@@ -1,5 +1,8 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
+
+from SF_NewsPortal.settings import MEDIA_URL
+
 
 # from news.models import Post, Comment
 
@@ -7,9 +10,11 @@ from django.db import models
 # Create your models here.
 class Author(AbstractUser):
     rating = models.FloatField(default=0)
-    image = models.ImageField(upload_to='users_images', null=True, blank=True)
+    image = models.ImageField(upload_to='users_images', null=True, blank=True,
+                              default='users_images/default_avatar.jpg')
     is_verified_email = models.BooleanField(default=False)
     about = models.TextField(blank=True)
+    status = models.CharField(max_length=100, blank=True)
 
     # def update_rating(self):
     #     self.rating = 0
