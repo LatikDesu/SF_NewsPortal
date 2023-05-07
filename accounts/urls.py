@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from accounts.views import UserLoginView, UserRegistrationView, UserProfileView, upgrade_me, EmailVerificationView
+from accounts.views import (EmailVerificationView, UserLoginView,
+                            UserProfileView, UserRegistrationView, upgrade_me)
 
 app_name = 'users'
 

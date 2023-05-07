@@ -48,14 +48,15 @@ INSTALLED_APPS = [
     'tinymce',
     'debug_toolbar',
     'django_filters',
+    'django_apscheduler',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.vk',
 
-    'news',
-    'accounts',
+    'news.apps.NewsConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -195,6 +196,8 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = 'testo-python'
 EMAIL_HOST_PASSWORD = 'nyqoawuztcptafxi'
 EMAIL_USE_SSL = True
+
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 SITE_ID = 3
 

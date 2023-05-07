@@ -5,10 +5,10 @@ from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, TemplateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, TemplateView, UpdateView
 
-from accounts.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
+from accounts.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
 from accounts.models import Author, EmailVerification
 from news.models import Post
 

@@ -2,7 +2,8 @@ from django.urls import path
 
 from .views import (AddComment, ArticleCreateView, ArticleDeleteView,
                     ArticleUpdateView, PostCreateView, PostDeleteView,
-                    PostDetailView, PostUpdateView, PostView, subscribe_category)
+                    PostDetailView, PostUpdateView, PostView,
+                    subscribe_category)
 
 app_name = 'news'
 

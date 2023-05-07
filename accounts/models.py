@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser, Group
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.db import models
 from django.template.loader import render_to_string
 from django.urls import reverse

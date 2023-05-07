@@ -1,15 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView)
+                                  TemplateView, UpdateView)
 
 from accounts.models import Author
 from news.forms import CommentForm, PostForm
-from news.models import Post, Category
+from news.models import Category, Post
 from SF_NewsPortal import settings
 
 from .filters import PostFilter

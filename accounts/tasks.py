@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from django.utils.timezone import now
 
-from accounts.models import EmailVerification, Author
+from accounts.models import Author, EmailVerification
 
 
 def send_email_verification(user_id):
