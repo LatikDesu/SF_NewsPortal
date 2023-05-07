@@ -31,6 +31,8 @@ INTERNAL_IPS = [
     'localhost',
 ]
 
+DOMAIN_NAME = 'http://127.0.0.1:8000'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -172,6 +174,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+DEFAULT_FROM_EMAIL = 'testo-python@yandex.ru'
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -184,6 +188,13 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     },
 }
+
+# Sending emails
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'testo-python'
+EMAIL_HOST_PASSWORD = 'nyqoawuztcptafxi'
+EMAIL_USE_SSL = True
 
 SITE_ID = 3
 

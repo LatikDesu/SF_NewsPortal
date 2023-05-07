@@ -5,6 +5,8 @@ from django.contrib.auth.forms import (AuthenticationForm, UserChangeForm,
 
 from accounts.models import Author
 
+from accounts.tasks import send_email_verification
+
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
@@ -35,6 +37,7 @@ class UserRegistrationForm(UserCreationForm):
         user = super(UserRegistrationForm, self).save(commit=True)
         basic_group = Group.objects.get(name='common')
         basic_group.user_set.add(user)
+        send_email_verification(user.id)
         return user
 
     class Meta:

@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
@@ -8,7 +9,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 from accounts.models import Author
 from news.forms import CommentForm, PostForm
-from news.models import Post
+from news.models import Post, Category
 from SF_NewsPortal import settings
 
 from .filters import PostFilter
@@ -48,6 +49,7 @@ class PostView(ListView):
         context = super(PostView, self).get_context_data()
         context['title'] = self.title
         context['filterset'] = self.filterset
+        context['categoryName'] = Category.objects.filter(id=self.kwargs.get('category_id')).first()
         return context
 
 
@@ -172,3 +174,14 @@ class ArticleDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView)
         if self.object.author != request.user:
             return HttpResponseForbidden("You don't have permission to delete this post.")
         return self.post(request, *args, **kwargs)
+
+
+@login_required
+def subscribe_category(request, category_id):
+    user = Author.objects.get(username=request.user)
+    category = Category.objects.get(id=category_id)
+    if not category.subscribers.filter(username=user):
+        category.subscribers.add(user)
+    else:
+        category.subscribers.remove(user)
+    return redirect(request.META.get('HTTP_REFERER'))

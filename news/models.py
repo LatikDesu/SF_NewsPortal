@@ -10,6 +10,7 @@ from .resources import *
 class Category(models.Model):
     name = models.CharField("Категория", max_length=255, unique=True)
     description = models.TextField("Описание")
+    subscribers = models.ManyToManyField(accounts.models.Author, blank=True)
     url = models.SlugField(max_length=160, unique=True)
 
     def __str__(self):

@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (AddComment, ArticleCreateView, ArticleDeleteView,
                     ArticleUpdateView, PostCreateView, PostDeleteView,
-                    PostDetailView, PostUpdateView, PostView)
+                    PostDetailView, PostUpdateView, PostView, subscribe_category)
 
 app_name = 'news'
 
@@ -10,7 +10,9 @@ urlpatterns = [
     path('', PostView.as_view(), name='news_list'),
     path("<int:pk>/", PostDetailView.as_view(), name="news_detail"),
     path('page/<int:page>', PostView.as_view(), name='paginator'),
-    path('news/<int:category_id>/', PostView.as_view(), name='news_category_list'),
+    path('category/<int:category_id>/', PostView.as_view(), name='news_category_list'),
+
+    path('subscribe_category/<int:category_id>', subscribe_category, name='subscribe_category'),
 
     path("comment/<int:pk>/", AddComment.as_view(), name="add_comment"),
 

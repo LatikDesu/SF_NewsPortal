@@ -47,6 +47,20 @@
 								{% if is_paginated %}
 										{% include 'include/pagination.html' %}
 								{% endif %}
+
+								{% if user.is_authenticated and request.path|contains:"/category/" %}
+										<div class="m-auto">
+										<button class="btn btn-primary mb-4"><a
+														href="{% url 'news:subscribe_category' view.kwargs.category_id %}">
+												{% if user.category_set.all|contains:categoryName %}
+														Отписаться от категории
+												{% else %}
+														Подписаться на категорию
+												{% endif %}
+										</a></button>
+								{% endif %}
+								</div>
+
 						</div>
 				</div>
 		</section>

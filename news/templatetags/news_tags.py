@@ -22,3 +22,8 @@ def url_replace(context, **kwargs):
 def get_last_posts(count=3):
     posts = Post.objects.order_by("-id")[:count]
     return {"last_posts": posts}
+
+
+@register.filter
+def contains(value, arg):
+    return arg in value
