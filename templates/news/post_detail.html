@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 {% load static news_tags %}
 
 {% block title %} {{ title }} {% endblock title %}
@@ -54,7 +55,7 @@
 														<div class="entry-content">
 																{{ post.description|safe }}
 														</div>
-														
+
 														<div
 																		class="tags-share-box center-box d-flex text-center justify-content-between border-top border-bottom py-3">
 
@@ -119,7 +120,9 @@
 
 										{% include 'news/comments.html' %}
 								</div>
-								{% include 'include/sidebar.html' %}
+								{% cache 10 sidebar %}
+										{% include 'include/sidebar.html' %}
+								{% endcache %}
 						</div>
 				</div>
 		</section>

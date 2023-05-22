@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from django.urls import reverse
 from tinymce.models import HTMLField
@@ -49,6 +50,10 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('news:news_detail', kwargs={"pk": self.pk})
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'post-{self.pk}')
 
     class Meta:
         verbose_name = "Статья"

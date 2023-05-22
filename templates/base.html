@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,12 +34,11 @@
 
 {% include 'include/header.html' %}
 
-
 {% block content %} {% endblock content %}
 
-
-{% include 'include/footer.html' %}
-
+{% cache 60 footer %}
+		{% include 'include/footer.html' %}
+{% endcache %}
 
 <!-- THEME JAVASCRIPT FILES
 ================================================== -->
